@@ -1,4 +1,5 @@
 ## Commands
+
 - check `NodeJS` version  
   `node -v`
 - new project with Playwright  
@@ -13,28 +14,29 @@
   `npx playwright show-report`
 
 ## Playwright Config modifications
+
 - config file `playwright.config.ts`
 - disable browsers, i.e. Firefox
-    ```javascript
-    // {
-    //   name: 'firefox',
-    //   use: {
-    //     ...devices['Desktop Firefox'],
-    //   },
-    // },
-    ```
-  
+  ```javascript
+  // {
+  //   name: 'firefox',
+  //   use: {
+  //     ...devices['Desktop Firefox'],
+  //   },
+  // },
+  ```
+
 ## Playwright snippets
+
 - running one test: `test.only`
 - creating Test Suite:
+
 ```javascript
-  test.describe(' [ test suite name ] ',() => {   
-  
-  });
+test.describe(" [ test suite name ] ", () => {});
 ```
+
 - test:
+
 ```javascript
-  test(' [ test name ] ',() => {   
-  
-  });
+test(" [ test name ] ", () => {});
 ```
