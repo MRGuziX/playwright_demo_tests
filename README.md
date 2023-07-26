@@ -32,11 +32,11 @@
 - creating Test Suite:
 
 ```javascript
-test.describe(" [ test suite name ] ", () => {});
+test.describe(' [ test suite name ] ', () => {});
 ```
 
 - test:
 
 ```javascript
-test(" [ test name ] ", () => {});
+test(' [ test name ] ', () => {});
 ```
