@@ -12,6 +12,8 @@
   `npx playwright test --headed`
 - view report  
   `npx playwright show-report`
+- run Trace Viewer on ZIP file while being in a folder with this ZIP:  
+  `npx playwright show-trace trace.zip`
 
 ## Playwright Config modifications
 
