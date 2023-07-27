@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test';
 
 test.describe(' Pulpit tests ', () => {
-  test.only('account money transfer', async ({ page }) => {
+  test('account money transfer', async ({ page }) => {
     const url = 'https://demo-bank.vercel.app/';
     const username = 'test1234';
     const password = 'password';
@@ -32,15 +32,25 @@ test.describe(' Pulpit tests ', () => {
   });
 
   test('mobile money transfer', async ({ page }) => {
-    await page.goto('https://demo-bank.vercel.app/');
-    await page.getByTestId('login-input').fill('test1234');
-    await page.getByTestId('password-input').fill('password');
+    const url = 'https://demo-bank.vercel.app/';
+    const username = 'test1234';
+    const password = 'password';
+    const expectedUsername = 'Jan Demobankowy';
+
+    await page.goto(url);
+    await page.getByTestId('login-input').fill(username);
+    await page.getByTestId('password-input').fill(password);
     await page.getByTestId('login-button').click();
+    await page.getByTestId('user-name').click();
 
-    await expect(page.getByTestId('user-name')).toHaveText('Jan Demobankowy');
+    await expect(page.getByTestId('user-name')).toHaveText(expectedUsername);
 
-    await page.locator('#widget_1_topup_receiver').selectOption('500 xxx xxx');
-    await page.locator('#widget_1_topup_amount').fill('11');
+    const topupReceiver = '500 xxx xxx';
+    const topupAmout = '10';
+    const expectedTopupMessage = `Doładowanie wykonane! ${topupAmout},00PLN na numer ${topupReceiver}`;
+
+    await page.locator('#widget_1_topup_receiver').selectOption(topupReceiver);
+    await page.locator('#widget_1_topup_amount').fill(topupAmout);
     await page.locator('#widget_1_topup_agreement').check();
 
     await expect(
@@ -51,32 +61,43 @@ test.describe(' Pulpit tests ', () => {
     await page.getByTestId('close-button').click();
 
     await expect(page.getByTestId('message-text')).toHaveText(
-      'Doładowanie wykonane! 11,00PLN na numer 500 xxx xxx',
+      expectedTopupMessage,
     );
   });
 
   test('mobile top-up warning test', async ({ page }) => {
-    await page.goto('https://demo-bank.vercel.app/');
-    await page.getByTestId('login-input').fill('test1234');
-    await page.getByTestId('password-input').fill('password');
-    await page.getByTestId('login-button').click();
+    const url = 'https://demo-bank.vercel.app/';
+    const username = 'test1234';
+    const password = 'password';
+    const expectedUsername = 'Jan Demobankowy';
 
-    await expect(page.getByTestId('user-name')).toHaveText('Jan Demobankowy');
+    await page.goto(url);
+    await page.getByTestId('login-input').fill(username);
+    await page.getByTestId('password-input').fill(password);
+    await page.getByTestId('login-button').click();
+    await page.getByTestId('user-name').click();
+
+    await expect(page.getByTestId('user-name')).toHaveText(expectedUsername);
+
+    const requiredFieldWarning = 'pole wymagane';
 
     await page.getByRole('button', { name: 'doładuj telefon' }).click();
 
     await expect(page.getByTestId('error-widget-1-topup-receiver')).toHaveText(
-      'pole wymagane',
+      requiredFieldWarning,
     );
     await expect(page.getByTestId('error-widget-1-topup-amount')).toHaveText(
-      'pole wymagane',
+      requiredFieldWarning,
     );
     await expect(page.getByTestId('error-widget-1-topup-agreement')).toHaveText(
-      'pole wymagane',
+      requiredFieldWarning,
     );
 
-    await page.locator('#widget_1_topup_receiver').selectOption('500 xxx xxx');
-    await page.locator('#widget_1_topup_amount').fill('11');
+    const topupReceiver = '500 xxx xxx';
+    const topupAmount = '10';
+
+    await page.locator('#widget_1_topup_receiver').selectOption(topupReceiver);
+    await page.locator('#widget_1_topup_amount').fill(topupAmount);
     await page.locator('#widget_1_topup_agreement').check();
 
     await expect(
@@ -92,54 +113,77 @@ test.describe(' Pulpit tests ', () => {
   });
 
   test('mobile top-up amount warning test', async ({ page }) => {
-    await page.goto('https://demo-bank.vercel.app/');
-    await page.getByTestId('login-input').fill('test1234');
-    await page.getByTestId('password-input').fill('password');
+    const url = 'https://demo-bank.vercel.app/';
+    const username = 'test1234';
+    const password = 'password';
+    const expectedUsername = 'Jan Demobankowy';
+
+    await page.goto(url);
+    await page.getByTestId('login-input').fill(username);
+    await page.getByTestId('password-input').fill(password);
     await page.getByTestId('login-button').click();
+    await page.getByTestId('user-name').click();
 
-    await expect(page.getByTestId('user-name')).toHaveText('Jan Demobankowy');
+    await expect(page.getByTestId('user-name')).toHaveText(expectedUsername);
 
-    await page.locator('#widget_1_topup_receiver').selectOption('500 xxx xxx');
-    await page.locator('#widget_1_topup_amount').fill('1');
+    const topupReceiver = '500 xxx xxx';
+    let topupAmount = '1';
+    const amountIsHigherThan5 = 'kwota musi być większa lub równa 5';
+
+    await page.locator('#widget_1_topup_receiver').selectOption(topupReceiver);
+    await page.locator('#widget_1_topup_amount').fill(topupAmount);
     await page.locator('#widget_1_topup_amount').blur();
 
     await expect
       .soft(page.getByTestId('error-widget-1-topup-amount'))
-      .toHaveText('kwota musi być większa lub równa 5');
+      .toHaveText(amountIsHigherThan5);
 
-    await page.locator('#widget_1_topup_amount').fill('5');
+    topupAmount = '5';
+
+    await page.locator('#widget_1_topup_amount').fill(topupAmount);
     await page.locator('#widget_1_topup_amount').blur();
 
     await expect
       .soft(page.getByTestId('error-widget-1-topup-amount'))
       .toBeHidden();
 
-    await page.locator('#widget_1_topup_amount').fill('150');
+    topupAmount = '150';
+
+    await page.locator('#widget_1_topup_amount').fill(topupAmount);
     await page.locator('#widget_1_topup_amount').blur();
 
     await expect
       .soft(page.getByTestId('error-widget-1-topup-amount'))
       .toBeHidden();
 
-    await page.locator('#widget_1_topup_amount').fill('151');
+    topupAmount = '151';
+    const amountIsHigherThan150 = 'kwota musi być mniejsza lub równa 150';
+
+    await page.locator('#widget_1_topup_amount').fill(topupAmount);
     await page.locator('#widget_1_topup_amount').blur();
 
     await expect
       .soft(page.getByTestId('error-widget-1-topup-amount'))
-      .toHaveText('kwota musi być mniejsza lub równa 150');
+      .toHaveText(amountIsHigherThan150);
 
-    await page.locator('#widget_1_topup_amount').fill('50,01');
+    topupAmount = '50,01';
+    const amountWithoutPennies = 'kwota musi być bez groszy';
+
+    await page.locator('#widget_1_topup_amount').fill(topupAmount);
     await page.locator('#widget_1_topup_amount').blur();
 
     await expect
       .soft(page.getByTestId('error-widget-1-topup-amount'))
-      .toHaveText('kwota musi być bez groszy');
+      .toHaveText(amountWithoutPennies);
 
-    await page.locator('#widget_1_topup_amount').fill('50,,01');
+    topupAmount = '50,,01';
+    const amountIsIncorrect = 'podana kwota jest niepoprawna';
+
+    await page.locator('#widget_1_topup_amount').fill(topupAmount);
     await page.locator('#widget_1_topup_amount').blur();
 
     await expect
       .soft(page.getByTestId('error-widget-1-topup-amount'))
-      .toHaveText('podana kwota jest niepoprawna');
+      .toHaveText(amountIsIncorrect);
   });
 });
