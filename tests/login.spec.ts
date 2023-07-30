@@ -1,8 +1,9 @@
 import { test, expect } from '@playwright/test';
 
 test.describe('User login to Demobank', () => {
+  const url = 'https://demo-bank.vercel.app/';
+
   test('successful login with correct username', async ({ page }) => {
-    const url = 'https://demo-bank.vercel.app/';
     const username = 'test1234';
     const password = 'password';
     const expectedUsername = 'Jan Demobankowy';
@@ -17,7 +18,6 @@ test.describe('User login to Demobank', () => {
   });
 
   test('unsuccessful login with too short username', async ({ page }) => {
-    const url = 'https://demo-bank.vercel.app/';
     const username = 'test';
     const password = 'password';
     const expectedErrorMessage = 'identyfikator ma min. 8 znaków';
@@ -32,7 +32,6 @@ test.describe('User login to Demobank', () => {
   });
 
   test('unsuccessful login with too short password', async ({ page }) => {
-    const url = 'https://demo-bank.vercel.app/';
     const username = 'test1234';
     const password = 'Pass';
     const expectedErrorMessage = 'hasło ma min. 8 znaków';

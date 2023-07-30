@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test';
 
 test.describe(' Pulpit tests ', () => {
-  test('account money transfer', async ({ page }) => {
+  test.beforeEach(async ({ page }) => {
     const url = 'https://demo-bank.vercel.app/';
     const username = 'test1234';
     const password = 'password';
@@ -14,7 +14,9 @@ test.describe(' Pulpit tests ', () => {
     await page.getByTestId('user-name').click();
 
     await expect(page.getByTestId('user-name')).toHaveText(expectedUsername);
+  });
 
+  test('account money transfer', async ({ page }) => {
     const receiverId = '2';
     const transferAmount = '123';
     const transferTitle = 'pizza';
@@ -32,19 +34,6 @@ test.describe(' Pulpit tests ', () => {
   });
 
   test('mobile money transfer', async ({ page }) => {
-    const url = 'https://demo-bank.vercel.app/';
-    const username = 'test1234';
-    const password = 'password';
-    const expectedUsername = 'Jan Demobankowy';
-
-    await page.goto(url);
-    await page.getByTestId('login-input').fill(username);
-    await page.getByTestId('password-input').fill(password);
-    await page.getByTestId('login-button').click();
-    await page.getByTestId('user-name').click();
-
-    await expect(page.getByTestId('user-name')).toHaveText(expectedUsername);
-
     const topupReceiver = '500 xxx xxx';
     const topupAmout = '10';
     const expectedTopupMessage = `Doładowanie wykonane! ${topupAmout},00PLN na numer ${topupReceiver}`;
@@ -66,19 +55,6 @@ test.describe(' Pulpit tests ', () => {
   });
 
   test('mobile top-up warning test', async ({ page }) => {
-    const url = 'https://demo-bank.vercel.app/';
-    const username = 'test1234';
-    const password = 'password';
-    const expectedUsername = 'Jan Demobankowy';
-
-    await page.goto(url);
-    await page.getByTestId('login-input').fill(username);
-    await page.getByTestId('password-input').fill(password);
-    await page.getByTestId('login-button').click();
-    await page.getByTestId('user-name').click();
-
-    await expect(page.getByTestId('user-name')).toHaveText(expectedUsername);
-
     const requiredFieldWarning = 'pole wymagane';
 
     await page.getByRole('button', { name: 'doładuj telefon' }).click();
@@ -113,19 +89,6 @@ test.describe(' Pulpit tests ', () => {
   });
 
   test('mobile top-up amount warning test', async ({ page }) => {
-    const url = 'https://demo-bank.vercel.app/';
-    const username = 'test1234';
-    const password = 'password';
-    const expectedUsername = 'Jan Demobankowy';
-
-    await page.goto(url);
-    await page.getByTestId('login-input').fill(username);
-    await page.getByTestId('password-input').fill(password);
-    await page.getByTestId('login-button').click();
-    await page.getByTestId('user-name').click();
-
-    await expect(page.getByTestId('user-name')).toHaveText(expectedUsername);
-
     const topupReceiver = '500 xxx xxx';
     let topupAmount = '1';
     const amountIsHigherThan5 = 'kwota musi być większa lub równa 5';
