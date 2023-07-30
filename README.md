@@ -19,6 +19,7 @@
 
 - config file `playwright.config.ts`
 - disable browsers, i.e. Firefox
+
   ```javascript
   // {
   //   name: 'firefox',
@@ -26,6 +27,20 @@
   //     ...devices['Desktop Firefox'],
   //   },
   // },
+  ```
+
+  ## Package.json modifications
+
+- config file `package.json`  
+  'npm' instead of npx when you want to run script within other script
+  ```json
+  {
+    "scripts": {
+      "test": "npx playwright test",
+      "test:headed": "npx playwright test --headed",
+      "test:pulpit:headed": "npm run test tests/pulpit.spec.ts -- --headed"
+    }
+  }
   ```
 
 ## Playwright snippets
