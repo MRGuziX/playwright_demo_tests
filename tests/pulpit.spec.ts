@@ -2,12 +2,11 @@ import { expect, test } from '@playwright/test';
 
 test.describe(' Pulpit tests ', () => {
   test.beforeEach(async ({ page }) => {
-    const url = 'https://demo-bank.vercel.app/';
     const username = 'test1234';
     const password = 'password';
     const expectedUsername = 'Jan Demobankowy';
 
-    await page.goto(url);
+    await page.goto('/'); //URL configured in  playwright.config
     await page.getByTestId('login-input').fill(username);
     await page.getByTestId('password-input').fill(password);
     await page.getByTestId('login-button').click();
