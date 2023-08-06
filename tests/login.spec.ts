@@ -1,16 +1,13 @@
 import { test, expect } from '@playwright/test';
+import { loginData } from '../test-data/login.data';
 
 test.describe('User login to Demobank', () => {
-  const url = 'https://demo-bank.vercel.app/';
-
   test('successful login with correct username', async ({ page }) => {
-    const username = 'test1234';
-    const password = 'password';
     const expectedUsername = 'Jan Demobankowy';
 
-    await page.goto(url);
-    await page.getByTestId('login-input').fill(username);
-    await page.getByTestId('password-input').fill(password);
+    await page.goto('/');
+    await page.getByTestId('login-input').fill(loginData.username);
+    await page.getByTestId('password-input').fill(loginData.password);
     await page.getByTestId('login-button').click();
     await page.getByTestId('user-name').click();
 
@@ -18,13 +15,11 @@ test.describe('User login to Demobank', () => {
   });
 
   test('unsuccessful login with too short username', async ({ page }) => {
-    const username = 'test';
-    const password = 'password';
     const expectedErrorMessage = 'identyfikator ma min. 8 znaków';
 
-    await page.goto(url);
-    await page.getByTestId('login-input').fill(username);
-    await page.getByTestId('password-input').fill(password);
+    await page.goto('/');
+    await page.getByTestId('login-input').fill(loginData.incorrectUsername);
+    await page.getByTestId('password-input').fill(loginData.password);
 
     await expect(page.getByTestId('error-login-id')).toHaveText(
       expectedErrorMessage,
@@ -32,13 +27,11 @@ test.describe('User login to Demobank', () => {
   });
 
   test('unsuccessful login with too short password', async ({ page }) => {
-    const username = 'test1234';
-    const password = 'Pass';
     const expectedErrorMessage = 'hasło ma min. 8 znaków';
 
-    await page.goto(url);
-    await page.getByTestId('login-input').fill(username);
-    await page.getByTestId('password-input').fill(password);
+    await page.goto('/');
+    await page.getByTestId('login-input').fill(loginData.username);
+    await page.getByTestId('password-input').fill(loginData.incorrectPassword);
     await page.getByTestId('password-input').blur();
 
     await expect(page.getByTestId('error-login-password')).toHaveText(
