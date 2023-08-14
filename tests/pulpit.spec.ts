@@ -1,14 +1,17 @@
 import { expect, test } from '@playwright/test';
 import { loginData } from '../test-data/login.data';
+import { LoginPage } from '../pages/login.page';
+
 test.describe(' Pulpit tests ', () => {
   test.beforeEach(async ({ page }) => {
+    const loginPage = new LoginPage(page);
     const expectedUsername = 'Jan Demobankowy';
+   
 
-    await page.goto('/'); //URL configured in  playwright.config
-    await page.getByTestId('login-input').fill(loginData.username);
-    await page.getByTestId('password-input').fill(loginData.password);
-    await page.getByTestId('login-button').click();
-    await page.getByTestId('user-name').click();
+    await page.goto('/');
+    await loginPage.loginInput.fill(loginData.username);
+    await loginPage.passwordInput.fill(loginData.password);
+    await loginPage.loginButton.click();
 
     await expect(page.getByTestId('user-name')).toHaveText(expectedUsername);
   });
