@@ -6,7 +6,6 @@ test.describe(' Pulpit tests ', () => {
   test.beforeEach(async ({ page }) => {
     const loginPage = new LoginPage(page);
     const expectedUsername = 'Jan Demobankowy';
-   
 
     await page.goto('/');
     await loginPage.loginInput.fill(loginData.username);
